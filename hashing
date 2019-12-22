@@ -1,0 +1,173 @@
+#include<iostream>
+#include<unordered_set>
+#include <functional>
+#include<algorithm>
+
+
+using namespace std;
+class sotrudnik
+{
+	int tabel_norm;
+public:
+	sotrudnik()
+	{
+		this->tabel_norm = 0;
+	}
+
+	sotrudnik(const int& tabel)
+	{
+		this->tabel_norm = tabel;
+
+	}
+
+	
+	friend ostream& operator << (ostream& stream, sotrudnik ob);
+	friend istream& operator >> (istream& stream, sotrudnik& ob);
+	int getnorm() { return this->tabel_norm; }
+
+};
+
+
+ostream& operator << (ostream& stream, sotrudnik ob)
+{
+	stream << ob.tabel_norm;
+	return stream;
+}
+istream& operator >> (istream& stream, sotrudnik& ob)
+{
+	stream >> ob.tabel_norm;
+	return stream;
+}
+
+class cmp
+{
+public:
+	size_t operator()(sotrudnik a, sotrudnik b) const
+	{
+		return a.getnorm() == b.getnorm();
+	}
+};
+
+class MyHash
+{
+	int m;
+public:
+	MyHash(int n)
+	{
+		m = n;
+	}
+	size_t operator()(sotrudnik ob) const
+	{
+		return ob.getnorm() % m;
+	}
+};
+
+void dobav(unordered_set<sotrudnik, MyHash, cmp> &ob1, int size1)
+{
+	cout << "vvedite kluch: " << endl;
+	sotrudnik a;
+	cin >> a;
+	ob1.insert(a);
+
+	
+}
+template <typename T>
+void udal(unordered_set<T, MyHash, cmp> &ob1, int size1)
+{
+
+	cout << "vvedite kluch: " << endl;
+	T a;
+	cin >> a;
+	ob1.erase(a);
+
+	
+}
+
+void vivod(unordered_set<sotrudnik, MyHash, cmp> ob1, int size1)
+{
+	cout << "Hash-table:\n";
+	for (int i = 0; i < size1; ++i)
+	{
+		cout << i << ": ";
+		for (auto ptr = ob1.begin(i); ptr != ob1.end(i); ptr++)
+		{
+			cout << *ptr << "   ";
+		}
+		cout << endl;
+	}
+}
+
+
+
+int main()
+{
+	setlocale(LC_ALL, "RUS");
+	cout << "vvedite informatsiu o sotrudnikax: " << endl;
+	sotrudnik s1, s2, s3, s4, s5, s6, s7;
+	cin >> s1 >> s2 >> s3 >> s4 >> s5 >> s6 >> s7;
+	cout << endl;
+
+	cout << "vvedite nuznoe m dly razresheniya kollizii " << endl;
+	int m;
+	cin >> m;
+
+	cout << "razmer hash table" << endl;
+	int size;
+	cin >> size;
+
+	unordered_set<sotrudnik, MyHash, cmp> ob(m, MyHash(m));
+	ob.insert({ s1,s2,s3,s4,s5,s6,s7 }); // вставка объектов в неупо мнво
+	for (auto p = ob.begin(); p != ob.end(); p++)
+		cout << *p << "   ";
+	cout << endl;
+	int chislo;
+	chislo = 5;
+
+	while (chislo != 322)
+	{
+		cout << "Выберете операцию, осуществляемую с хеш-таблицей:" << endl;
+		cout << "1) добавление в хеш-таблицу;\n"
+			"2) удаление элемента из хеш-таблицы;\n"
+			"3) поиск элемента по ключу в хеш-таблице;\n"
+			"4) вывод всех элементов хеш-таблицы;\n"
+			"5) выйти из меню\n" << endl;
+		cin >> chislo;
+		if (chislo == 1)
+		{
+			dobav(ob, size);
+
+		}
+		if (chislo == 2)
+		{
+			udal(ob, size);
+		}
+		if (chislo == 3)
+		{
+			cout << endl << "Введите ключ элемента, который хотите найти:" << endl;
+			int poisk;
+			cin >> poisk;
+			sotrudnik ob2(poisk);
+			if (ob.find(ob2) == ob.end())
+				cout << "ne naiden " << endl;
+			else
+				cout << "element naiden " << endl;
+			cout << endl;
+
+		}
+		if (chislo == 4)
+		{
+			vivod(ob, size);
+		}
+		if (chislo == 5)
+		{
+			break;
+		}
+
+	}
+
+
+	int o;
+	cin >> o;
+	return 0;
+
+}
