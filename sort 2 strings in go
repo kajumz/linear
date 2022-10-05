@@ -1,0 +1,34 @@
+package main
+ 
+import (
+    "fmt"
+    "sort"
+)
+func StringToRuneSlice(s string) []rune {
+      var r []rune
+      for _, runeValue := range s {
+              r = append(r, runeValue)
+      }
+      return r
+}
+
+func SortStringByCharacter(s string) string {
+      r := StringToRuneSlice(s)
+      sort.Slice(r, func(i, j int) bool {
+              return r[i] < r[j]
+      })
+      return string(r)
+}
+
+func merge(s1 string, s2 string) string{
+  v:=s1+s2
+  a:=SortStringByCharacter(v)
+  return a;
+}
+func main() {
+    var s1 string
+    var s2 string
+    fmt.Scanln(&s1)
+    fmt.Scanln(&s2)
+    fmt.Println(merge(s1,s2))
+}
